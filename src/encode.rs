@@ -1,4 +1,4 @@
-use crate::caesor::caesor;
+use crate::caesor;
 
 pub fn encode(clear_text: &String, key: &String) -> String {
     let mut ciphered_text = String::new();
@@ -6,7 +6,7 @@ pub fn encode(clear_text: &String, key: &String) -> String {
 
     for character in clear_text.chars() {
         let k = key_cycle.next().expect("Cycle failed");
-        ciphered_text.push(caesor(k, character));
+        ciphered_text.push(caesor::encode(&k, &character));
     }
 
     return ciphered_text;

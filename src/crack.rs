@@ -1,7 +1,32 @@
 use std::{collections::HashMap, vec};
 use primes::factors;
 
-pub fn crack(ciphered_text: &String) -> String {
+use crate::{caesor, decode};
+
+pub fn crack(ciphered_text: &String, length: &Option<usize>) -> String {
+    let mut key: String;
+    match length {
+       Some(n) => key = String::with_capacity(*n),
+       None => key = String::with_capacity(calculate_length(ciphered_text))
+    }
+
+    
+    for i in 0..key.capacity() {
+        let mut parts = String::new();
+        let mut cycle = (*ciphered_text).chars();
+        for _ in 0..i {
+            let _ = cycle.next();
+        }
+        for k in cycle.step_by(key.capacity()) {
+           parts.push(k); 
+        }
+        key.push(caesor::crack(&parts));
+    }
+    
+    return decode(ciphered_text, &key); 
+}
+
+fn calculate_length(ciphered_text: &String) -> usize {
     let mut patterns: HashMap<String, Vec<u64>> = HashMap::new();
 
     let chars0 = ciphered_text.chars();
@@ -56,7 +81,6 @@ pub fn crack(ciphered_text: &String) -> String {
         }
     }
 
+    0    
 
-
-    return String::new();
 }

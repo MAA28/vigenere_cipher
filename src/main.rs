@@ -1,58 +1,50 @@
 use colored::Colorize;
-use std::env::args;
 
-mod caesor;
 mod crack;
 mod decode;
 mod encode;
 
+mod caesor;
+
+mod app;
+
+use clap::Parser;
+
+use crate::{crack::crack, decode::decode, encode::encode};
+
 fn main() {
-    let mode = args()
-        .nth(1)
-        .expect("No mode given (encode, decode, crack, test)");
-    assert!(mode == "encode" || mode == "decode" || mode == "crack" || mode == "test");
-    if mode != "test" {
-        let text = args().nth(2).expect("No text given");
-        if mode != "crack" {
-            let key = args().nth(3).expect("No key was given");
-            if mode == "encode" {
+    let args = app::Cli::parse();
+
+    match args.command {
+        app::Commands::Encode(app::EncodeOptions { text, key }) => {
+            if args.verbose {
                 println!(
-                    "Encoding \"{}\" with the key \"{}\"",
-                    text.bold(),
-                    key.to_string().bold()
+                    "Encode \"{}\" with the key \"{}\":",
+                    &text.to_string().blue().bold(),
+                    &key.to_string().yellow().bold()
                 );
-                let encoded_text = encode::encode(&text, &key);
-                println!("{}", encoded_text.bold());
-            } else if mode == "decode" {
+            }
+            let encoded = encode(&text, &key);
+            println!("{}", encoded.to_string().green().bold());
+        }
+        app::Commands::Decode(app::DecodeOptions { text, key }) => {
+            if args.verbose {
                 println!(
                     "Decoding \"{}\" with the key \"{}\"",
-                    text.bold(),
-                    key.to_string().bold()
+                    &text.to_string().blue().bold(),
+                    &key.to_string().yellow().bold()
                 );
-                let decoded_text = decode::decode(&text, &key);
-                println!("{}", decoded_text.bold());
             }
-        } else {
-            println!("Cracking \"{}\"", text.bold());
-
-            let cracked_text = crack::crack(&text);
-            println!("{}", cracked_text.bold());
+            let decoded = decode(&text, &key);
+            println!("{}", decoded.green().bold());
         }
-    } else {
-        let key = "abc".to_string();
+        app::Commands::Crack(app::CrackOptions { text, length }) => {
+            if args.verbose {
+                println!("Cracked \"{}\":", &text.to_string().blue().bold());
+            }
 
-        let clear_text = "zurwinterszeitalseinmaleintieferschneelagmussteeinarmerjungehinausgehenundholzaufeinemschlittenholenwieeresnunzusammengesuchtundaufgeladenhattewollteerweilersoerfrorenwarnochnichtnachhausgehensondernerstfeueranmachenundsicheinbisschenwaermendascharrteerdenschneewegundwieersodenerdbodenaufraeumtefandereinenkleinengoldenenschluesselnunglaubteerwoderschluesselwaeremuessteauchdasschlossdazuseingrubindererdeundfandeineiserneskaestchenwennderschluesselnurpasstdachteeressindgewisskostbaresachenindemkaestchenersuchteabereswarkeinschluessellochdaendlichentdeckteereinsabersokleindassmaneskaumsehenkonnteerprobierteundderschluesselpasstegluecklichdadrehteereinmalherumundnunmuessenwirwartenbiservollendsaufgeschlossenunddendeckelaufgemachthatdannwerdenwirerfahrenwasfuerwunderbaresachenindemkaestchenlagen".to_string();
-        println!("Clear text: {}", clear_text);
-
-        let ciphered_text = encode::encode(&clear_text, &key);
-        println!("Ciphered text: {}", ciphered_text);
-
-        let deciphered_text = decode::decode(&ciphered_text, &key);
-        assert_eq!(clear_text, deciphered_text);
-        println!("Decoding is working!");
-
-        let cracked_text = crack::crack(&ciphered_text);
-        assert_eq!(clear_text, cracked_text);
-        println!("Cracking is working!");
+            let cracked = crack(&text, &length);
+            println!("{}", cracked.green().bold());
+        }
     }
 }

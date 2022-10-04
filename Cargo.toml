@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 colored="*"
 primes="*"
+clap={version="4.0.8", features=["derive"]}
