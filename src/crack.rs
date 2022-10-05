@@ -10,8 +10,8 @@ pub fn crack(ciphered_text: &String, length: &Option<usize>) -> String {
        None => key = String::with_capacity(calculate_length(ciphered_text))
     }
 
-    
     for i in 0..key.capacity() {
+        
         let mut parts = String::new();
         let mut cycle = (*ciphered_text).chars();
         for _ in 0..i {
@@ -22,7 +22,7 @@ pub fn crack(ciphered_text: &String, length: &Option<usize>) -> String {
         }
         key.push(caesor::crack(&parts));
     }
-    
+
     return decode(ciphered_text, &key); 
 }
 

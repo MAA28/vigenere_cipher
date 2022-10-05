@@ -1,0 +1,2 @@
+bin.name="vigenere_cipher"
+args="decode -t bddffhhjjllnnpprrttvvxxzzb -k bc"

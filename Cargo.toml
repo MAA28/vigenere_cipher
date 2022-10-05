@@ -9,3 +9,4 @@ edition = "2021"
 colored="*"
 primes="*"
 clap={version="4.0.8", features=["derive"]}
+trycmd="*"

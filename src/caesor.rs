@@ -14,7 +14,6 @@ pub fn decode(ciphered_text: &char, key: &char) -> char {
 
 
 pub fn crack(ciphered_text: &String) -> char {
-    println!("{}", ciphered_text);
     let avg_dist = [
         /*A*/ 0.0558, /*B*/ 0.0196, /*C*/ 0.0316, /*D*/ 0.0498,
         /*E*/ 0.1693, /*F*/ 0.0149, /*G*/ 0.0302, /*H*/ 0.0498,
