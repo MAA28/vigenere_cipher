@@ -54,12 +54,12 @@ fn calculate_length(ciphered_text: &String) -> usize {
     let mut possible_factors: HashMap<u64, u64> = HashMap::new();
 
     for key in patterns.keys() {
-        println!("Pattern: {}", key);
+        // println!("Pattern: {}", key);
         let values = patterns.get(key).expect("Wrong key");
         for value in values {
-           print!("{} -> ", value);
+           // print!("{} -> ", value);
             let factors = factors(*value);
-            println!("{:?}", factors);
+            // println!("{:?}", factors);
             for factor in factors {
                 if possible_factors.contains_key(&factor) {
                     let k = possible_factors.get_mut(&factor).expect("Factor doesnt exist");
@@ -76,7 +76,7 @@ fn calculate_length(ciphered_text: &String) -> usize {
     for p in possible_factors.keys() {
         let value =  possible_factors.get(p).unwrap();
         if 2 * value > ciphered_text.len() as u64 {
-            println!("{}: {}", p, possible_factors.get(p).unwrap());
+            // println!("{}: {}", p, possible_factors.get(p).unwrap());
             possible_offsets.push(*p);
         }
     }
